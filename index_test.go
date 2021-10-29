@@ -98,3 +98,31 @@ func TestAddTodoList(t *testing.T) {
 		t.Errorf("Expected todo ID to be '1'. Got '%v'", m["id"])
 	}
 }
+
+func TestGetTodoListitems(t *testing.T) {
+	clearTable()
+	addtodoitemsintable(1)
+
+	req, _ := http.NewRequest("GET", "/todolist", nil)
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	var m map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &m)
+
+	if m["id"] != 1.0 {
+		t.Errorf("Expected todo ID to be '1'. Got '%v'", m["id"])
+	}
+
+}
+
+func addtodoitemsintable(count int) {
+	if count < 1 {
+		count = 1
+	}
+
+	for i := 0; i < count; i++ {
+		a.DB.Exec("INSERT INTO todo(Todolist) VALUES($1)", "Product")
+	}
+}
