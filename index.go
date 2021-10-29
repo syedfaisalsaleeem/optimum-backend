@@ -1,9 +1,19 @@
 package main
 
-/// Go fmt import
-import "fmt"
+import (
+    "log"
+    "net/http"
+  "encoding/json"
+  "github.com/gorilla/mux"
+)
 
-// Go main function
 func main() {
-	fmt.Println("Hello World!")
+    router := mux.NewRouter()
+
+    router.HandleFunc("/books", func(w http.ResponseWriter, r *http.Request) {
+        json.NewEncoder(w).Encode("Hello World")
+    })
+
+    log.Println("API is running!")
+    http.ListenAndServe(":4000", router)
 }
