@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,7 +17,13 @@ type App struct {
 }
 
 func (a *App) Initialize(user, password, dbname string) {
+	connectionString := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", user, password, dbname)
 
+	var err error
+	a.DB, err = sql.Open("postgres", connectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 }
@@ -45,7 +53,7 @@ func main() {
 	a := App{}
 	a.Initialize(
 		"postgres",
-		"FAISAL",
+		"faisal",
 		"postgres")
 
 	a.Run(":8010")

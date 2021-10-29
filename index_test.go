@@ -12,14 +12,14 @@ var a App
 func TestNew(t *testing.T) {
 	a.Initialize(
 		"postgres",
-		"postgres",
-		"testing")
+		"faisal",
+		"postgres")
 }
 
 const tableCreationQuery = `CREATE TABLE IF NOT EXISTS todo
 (
     id SERIAL,
-    todolist TEXT,
+    todolist TEXT
 )`
 
 func ensureTableExists() {
