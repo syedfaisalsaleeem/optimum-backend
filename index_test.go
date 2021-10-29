@@ -89,7 +89,7 @@ func TestAddTodoList(t *testing.T) {
 	json.Unmarshal(response.Body.Bytes(), &m)
 
 	if m["todolist"] != "test product" {
-		t.Errorf("Expected todolist to be 'test product'. Got '%v'", m["name"])
+		t.Errorf("Expected todolist to be 'test product'. Got '%v'", m["todolist"])
 	}
 
 	// the id is compared to 1.0 because JSON unmarshaling converts numbers to
@@ -104,15 +104,17 @@ func TestGetTodoListitems(t *testing.T) {
 	addtodoitemsintable(1)
 
 	req, _ := http.NewRequest("GET", "/todolist", nil)
+	req.Header.Set("Content-Type", "application/json")
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
+	bytes := []byte(response.Body.String())
 
-	var m map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &m)
-
-	if m["id"] != 1.0 {
-		t.Errorf("Expected todo ID to be '1'. Got '%v'", m["id"])
+	// Unmarshal string into structs.
+	var m1 []todo
+	json.Unmarshal(bytes, &m1)
+	if m1[0].ID != 1.0 {
+		t.Errorf("Expected todo ID to be '1'. Got '%v'", m1[0].ID)
 	}
 
 }
