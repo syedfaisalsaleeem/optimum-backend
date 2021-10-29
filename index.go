@@ -6,17 +6,16 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
 )
 
 type App struct {
 	Router *mux.Router
 	DB     *sql.DB
 }
-type test_data struct {
-	Data string `json:"data"`
-}
 
 func (a *App) Initialize(user, password, dbname string) {
+
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 }
@@ -26,10 +25,8 @@ func (a *App) Run(addr string) {
 }
 
 func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
-	data1 := test_data{
-		Data: "test",
-	}
-	respondWithJSON(w, http.StatusOK, data1)
+	data_test := []string{}
+	respondWithJSON(w, http.StatusOK, data_test)
 }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
@@ -48,8 +45,8 @@ func main() {
 	a := App{}
 	a.Initialize(
 		"postgres",
-		"postgres",
-		"testing")
+		"FAISAL",
+		"postgres")
 
 	a.Run(":8010")
 }

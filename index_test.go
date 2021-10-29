@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,17 +16,25 @@ func TestNew(t *testing.T) {
 		"testing")
 }
 
-func TestFail(t *testing.T) {
-	t.Errorf("Expected error")
+const tableCreationQuery = `CREATE TABLE IF NOT EXISTS todo
+(
+    id SERIAL,
+    todolist TEXT,
+)`
 
+func ensureTableExists() {
+	if _, err := a.DB.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
 }
+
 func Test_testAPI(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/test", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	if body := response.Body.String(); body != `{"data":"test"}` {
+	if body := response.Body.String(); body != `[]` {
 		t.Errorf("Expected an empty array. Got %s", body)
 	}
 }
@@ -41,4 +50,8 @@ func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	a.Router.ServeHTTP(rr, req)
 
 	return rr
+}
+
+func TestDBConnection(t *testing.T) {
+	ensureTableExists()
 }
