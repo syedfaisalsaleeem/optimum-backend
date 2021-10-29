@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -22,7 +21,7 @@ type todo struct {
 	Todolist string `json:"todolist"`
 }
 
-func gettodolist(db *sql.DB, start, count int) ([]todo, error) {
+func gettodolist(db *sql.DB) ([]todo, error) {
 	rows, err := db.Query(
 		"SELECT id, todolist FROM todo ")
 
@@ -79,17 +78,8 @@ func respondWithError(w http.ResponseWriter, code int, message string) {
 }
 
 func (a *App) gettodolistitems(w http.ResponseWriter, r *http.Request) {
-	count, _ := strconv.Atoi(r.FormValue("count"))
-	start, _ := strconv.Atoi(r.FormValue("start"))
 
-	if count > 10 || count < 1 {
-		count = 10
-	}
-	if start < 0 {
-		start = 0
-	}
-
-	products, err := gettodolist(a.DB, start, count)
+	products, err := gettodolist(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -97,10 +87,39 @@ func (a *App) gettodolistitems(w http.ResponseWriter, r *http.Request) {
 
 	respondWithJSON(w, http.StatusOK, products)
 }
+func (p *todo) createtodolistitem(db *sql.DB) error {
+	err := db.QueryRow(
+		"INSERT INTO todo(Todolist) VALUES($1) RETURNING id",
+		p.Todolist).Scan(&p.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *App) addtodolist(w http.ResponseWriter, r *http.Request) {
+	var p todo
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&p); err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	if err := p.createtodolistitem(a.DB); err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusCreated, p)
+}
 
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/test", a.getProducts).Methods("GET")
 	a.Router.HandleFunc("/todolist", a.gettodolistitems).Methods("GET")
+	a.Router.HandleFunc("/todolist", a.addtodolist).Methods("POST")
 
 }
 

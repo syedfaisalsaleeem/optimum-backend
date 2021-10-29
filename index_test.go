@@ -60,6 +60,7 @@ func TestDBConnection(t *testing.T) {
 
 func clearTable() {
 	a.DB.Exec("DELETE FROM todo")
+	a.DB.Exec("ALTER SEQUENCE todo_id_seq RESTART WITH 1")
 }
 
 func TestEmptyTable(t *testing.T) {
@@ -87,13 +88,13 @@ func TestAddTodoList(t *testing.T) {
 	var m map[string]interface{}
 	json.Unmarshal(response.Body.Bytes(), &m)
 
-	if m["Todolist"] != "test product" {
-		t.Errorf("Expected product name to be 'test product'. Got '%v'", m["name"])
+	if m["todolist"] != "test product" {
+		t.Errorf("Expected todolist to be 'test product'. Got '%v'", m["name"])
 	}
 
 	// the id is compared to 1.0 because JSON unmarshaling converts numbers to
 	// floats, when the target is a map[string]interface{}
 	if m["id"] != 1.0 {
-		t.Errorf("Expected product ID to be '1'. Got '%v'", m["id"])
+		t.Errorf("Expected todo ID to be '1'. Got '%v'", m["id"])
 	}
 }
