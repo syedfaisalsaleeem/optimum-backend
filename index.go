@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -14,6 +15,34 @@ import (
 type App struct {
 	Router *mux.Router
 	DB     *sql.DB
+}
+
+type todo struct {
+	ID       int    `json:"id"`
+	Todolist string `json:"todolist"`
+}
+
+func gettodolist(db *sql.DB, start, count int) ([]todo, error) {
+	rows, err := db.Query(
+		"SELECT id, todolist FROM todo ")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	todolistitems := []todo{}
+
+	for rows.Next() {
+		var p todo
+		if err := rows.Scan(&p.ID, &p.Todolist); err != nil {
+			return nil, err
+		}
+		todolistitems = append(todolistitems, p)
+	}
+
+	return todolistitems, nil
 }
 
 func (a *App) Initialize(user, password, dbname string) {
@@ -45,8 +74,33 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
+func respondWithError(w http.ResponseWriter, code int, message string) {
+	respondWithJSON(w, code, map[string]string{"error": message})
+}
+
+func (a *App) gettodolistitems(w http.ResponseWriter, r *http.Request) {
+	count, _ := strconv.Atoi(r.FormValue("count"))
+	start, _ := strconv.Atoi(r.FormValue("start"))
+
+	if count > 10 || count < 1 {
+		count = 10
+	}
+	if start < 0 {
+		start = 0
+	}
+
+	products, err := gettodolist(a.DB, start, count)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, products)
+}
+
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/test", a.getProducts).Methods("GET")
+	a.Router.HandleFunc("/todolist", a.gettodolistitems).Methods("GET")
 
 }
 

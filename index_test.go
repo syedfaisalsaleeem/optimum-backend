@@ -19,7 +19,7 @@ func TestNew(t *testing.T) {
 const tableCreationQuery = `CREATE TABLE IF NOT EXISTS todo
 (
     id SERIAL,
-    todolist TEXT
+    Todolist TEXT
 )`
 
 func ensureTableExists() {
