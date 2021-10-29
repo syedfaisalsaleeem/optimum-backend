@@ -1,19 +1,29 @@
 package main
 
 import (
-    "log"
-    "net/http"
-  "encoding/json"
-  "github.com/gorilla/mux"
+	"database/sql"
+	"github.com/gorilla/mux"
+	"net/http"
 )
 
+type App struct {
+	Router *mux.Router
+	DB     *sql.DB
+}
+
+func (a *App) Initialize(user, password, dbname string) {
+	a.Router = mux.NewRouter()
+}
+
+func (a *App) Run(addr string) {
+	http.ListenAndServe(":8010", a.Router) 
+}
+
 func main() {
-    router := mux.NewRouter()
-
-    router.HandleFunc("/books", func(w http.ResponseWriter, r *http.Request) {
-        json.NewEncoder(w).Encode("Hello World")
-    })
-
-    log.Println("API is running!")
-    http.ListenAndServe(":4000", router)
+	a := App{}
+	a.Initialize(
+		"postgres",
+		"postgres",
+		"testing")
+	a.Run(":8010")
 }
