@@ -47,6 +47,7 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/test", a.getProducts).Methods("GET")
+
 }
 
 func main() {

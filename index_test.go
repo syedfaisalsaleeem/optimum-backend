@@ -55,3 +55,19 @@ func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 func TestDBConnection(t *testing.T) {
 	ensureTableExists()
 }
+
+func clearTable() {
+	a.DB.Exec("DELETE FROM todo")
+}
+
+func TestEmptyTable(t *testing.T) {
+	clearTable()
+	req, _ := http.NewRequest("GET", "/todolist", nil)
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	if body := response.Body.String(); body != "[]" {
+		t.Errorf("Expected an empty array. Got %s", body)
+	}
+}
