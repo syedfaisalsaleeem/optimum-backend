@@ -1,4 +1,4 @@
-module example/hello
+module backend/index
 
 go 1.17
 
