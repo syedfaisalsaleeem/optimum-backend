@@ -76,9 +76,12 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 func respondWithError(w http.ResponseWriter, code int, message string) {
 	respondWithJSON(w, code, map[string]string{"error": message})
 }
+func setupCorsResponse(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 
+}
 func (a *App) gettodolistitems(w http.ResponseWriter, r *http.Request) {
-
+	setupCorsResponse(&w)
 	products, err := gettodolist(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -100,6 +103,7 @@ func (p *todo) createtodolistitem(db *sql.DB) error {
 }
 
 func (a *App) addtodolist(w http.ResponseWriter, r *http.Request) {
+	setupCorsResponse(&w)
 	var p todo
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&p); err != nil {
@@ -112,7 +116,6 @@ func (a *App) addtodolist(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	respondWithJSON(w, http.StatusCreated, p)
 }
 
