@@ -30,19 +30,19 @@ Runs the app in the development mode at [http://localhost:8010]
 
 Launches the test runner in the interactive watch mode.\
 All the test cases are described below:
-=== RUN   TestNew
---- PASS: TestNew (0.00s)     
-=== RUN   Test_testAPI        
---- PASS: Test_testAPI (0.00s)
-=== RUN   TestDBConnection    
---- PASS: TestDBConnection (0.09s)
-=== RUN   TestEmptyTable
---- PASS: TestEmptyTable (0.01s) 
-=== RUN   TestAddTodoList        
---- PASS: TestAddTodoList (0.00s)
-=== RUN   TestGetTodoListitems   
---- PASS: TestGetTodoListitems (0.00s)
-PASS
+RUN   TestNew
+PASS: TestNew (0.00s)     
+RUN   Test_testAPI        
+PASS: Test_testAPI (0.00s)
+RUN   TestDBConnection    
+PASS: TestDBConnection (0.09s)
+RUN   TestEmptyTable
+PASS: TestEmptyTable (0.01s) 
+RUN   TestAddTodoList        
+PASS: TestAddTodoList (0.00s)
+RUN   TestGetTodoListitems   
+PASS: TestGetTodoListitems (0.00s)
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
