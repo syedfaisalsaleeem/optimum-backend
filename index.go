@@ -44,6 +44,12 @@ func gettodolist(db *sql.DB) ([]todo, error) {
 	return todolistitems, nil
 }
 
+const tableCreationQuery = `CREATE TABLE IF NOT EXISTS todo
+(
+    id SERIAL,
+    Todolist TEXT
+)`
+
 func (a *App) Initialize(user, password, dbname string) {
 	connectionString := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", user, password, dbname)
 
@@ -52,6 +58,7 @@ func (a *App) Initialize(user, password, dbname string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	a.DB.Exec(tableCreationQuery);
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 }
