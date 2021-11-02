@@ -18,12 +18,6 @@ func TestNew(t *testing.T) {
 		"postgres")
 }
 
-const tableCreationQuery = `CREATE TABLE IF NOT EXISTS todo
-(
-    id SERIAL,
-    Todolist TEXT
-)`
-
 func ensureTableExists() {
 	if _, err := a.DB.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
