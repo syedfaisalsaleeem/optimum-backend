@@ -43,6 +43,9 @@ PASS: TestAddTodoList (0.00s)
 RUN   TestGetTodoListitems   
 PASS: TestGetTodoListitems (0.00s)
 
+## Running Rest Api through Docker
+The rest apis are dockerized and they can be run through these commands:
+- `docker-compose up -d --build`
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
