@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -50,21 +52,21 @@ const tableCreationQuery = `CREATE TABLE IF NOT EXISTS todo
     Todolist TEXT
 )`
 
-func (a *App) Initialize(user, password, dbname string) {
-	connectionString := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", user, password, dbname)
+func (a *App) Initialize(user, password, host, dbname string) {
+	connectionString := fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=disable", user, password, host, dbname)
 
 	var err error
 	a.DB, err = sql.Open("postgres", connectionString)
 	if err != nil {
 		log.Fatal(err)
 	}
-	a.DB.Exec(tableCreationQuery);
+	a.DB.Exec(tableCreationQuery)
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 }
 
 func (a *App) Run(addr string) {
-	http.ListenAndServe(":8010", a.Router)
+	http.ListenAndServe(addr, a.Router)
 }
 
 func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
@@ -133,12 +135,27 @@ func (a *App) initializeRoutes() {
 
 }
 
+func goDotEnvVariable(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	return os.Getenv(key)
+}
+
 func main() {
+
 	a := App{}
 	a.Initialize(
-		"postgres",
-		"faisal",
-		"postgres")
+		goDotEnvVariable("DB_USER"),
+		goDotEnvVariable("DB_PASSWORD"),
+		goDotEnvVariable("DB_HOST"),
+		goDotEnvVariable("DB_NAME"),
+	)
 
-	a.Run(":8010")
+	a.Run(":8080")
 }
