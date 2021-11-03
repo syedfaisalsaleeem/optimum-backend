@@ -13,9 +13,11 @@ var a App
 
 func TestNew(t *testing.T) {
 	a.Initialize(
-		"postgres",
-		"faisal",
-		"postgres")
+		goDotEnvVariable("DB_USER"),
+		goDotEnvVariable("DB_PASSWORD"),
+		goDotEnvVariable("DB_HOST"),
+		goDotEnvVariable("DB_NAME"),
+	)
 }
 
 func ensureTableExists() {
