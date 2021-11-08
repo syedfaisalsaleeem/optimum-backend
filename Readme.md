@@ -18,15 +18,14 @@ To get started using this package follow the instructions below.
 
 In the project directory, you can run:
 
-### `go run main.go`
+### `go run .`
 
-Runs the app in the development mode at [http://localhost:8010]
+Runs the app in the development mode at [http://localhost:8080]
 
 
 ### Testing
 
-1) Run the go application using `go run main.go`
-2) In the second terminal test the application using `go test main.go main_test.go -v`
+Test the application using `go test index.go loadenv.go model.go utilities.go views.go controller.go index_test.go -v`
 
 Launches the test runner in the interactive watch mode.\
 All the test cases are described below:

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"regexp"
 )
 
 func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
@@ -35,12 +36,24 @@ func (a *App) addtodolist(w http.ResponseWriter, r *http.Request) {
 
 	var p todo
 	decoder := json.NewDecoder(r.Body)
+
 	if err := decoder.Decode(&p); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
+
 	defer r.Body.Close()
 
+	space := regexp.MustCompile(`\s+`)
+	data := space.ReplaceAllString(p.Todolist, " ")
+	if data == "" {
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	if data == " " {
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
 	if err := p.createtodolistitem(a.DB); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
