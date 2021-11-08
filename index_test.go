@@ -115,12 +115,38 @@ func TestGetTodoListitems(t *testing.T) {
 
 }
 
+func TestPostEmptyItem(t *testing.T) {
+	clearTable()
+	var jsonStr = []byte(`{"Todolist":" "}`)
+	req, _ := http.NewRequest("POST", "/todolist", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	var m map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if response.Code != 401 {
+		t.Errorf("Empty Items added --")
+	}
+
+	// the id is compared to 1.0 because JSON unmarshaling converts numbers to
+	// floats, when the target is a map[string]interface{}
+	if m["id"] != 1.0 {
+		t.Errorf("Expected todo ID to be '1'. Got '%v'", m["id"])
+	}
+
+}
+
 func addtodoitemsintable(count int) {
 	if count < 1 {
 		count = 1
 	}
-
-	for i := 0; i < count; i++ {
-		a.DB.Exec("INSERT INTO todo(Todolist) VALUES($1)", "Product")
+	if count == 2 {
+		a.DB.Exec("INSERT INTO todo(Todolist) VALUES($1)", " ")
+	} else {
+		for i := 0; i < count; i++ {
+			a.DB.Exec("INSERT INTO todo(Todolist) VALUES($1)", "Product")
+		}
 	}
 }
