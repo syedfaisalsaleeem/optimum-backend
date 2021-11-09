@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -28,6 +27,5 @@ func removeExtraSpaces(text string) string {
 	space := regexp.MustCompile(`\s+`)
 	data := space.ReplaceAllString(text, " ")
 	strip_data := strings.TrimSpace(data)
-	fmt.Println(strip_data)
 	return strip_data
 }

@@ -44,7 +44,7 @@ func (a *App) addtodolist(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	data := removeExtraSpaces(p.Todolist)
-	if data == " " {
+	if data == "" {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
