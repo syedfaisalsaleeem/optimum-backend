@@ -10,9 +10,10 @@ type todo struct {
 }
 
 func (p *todo) createtodolistitem(db *sql.DB) error {
+	data := removeExtraSpaces(p.Todolist)
 	err := db.QueryRow(
 		"INSERT INTO todo(Todolist) VALUES($1) RETURNING id",
-		p.Todolist).Scan(&p.ID)
+		data).Scan(&p.ID)
 
 	if err != nil {
 		return err

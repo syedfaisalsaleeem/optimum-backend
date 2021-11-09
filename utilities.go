@@ -2,7 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"regexp"
+	"strings"
 )
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
@@ -19,4 +22,12 @@ func respondWithError(w http.ResponseWriter, code int, message string) {
 
 func setupCorsResponse(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
+func removeExtraSpaces(text string) string {
+	space := regexp.MustCompile(`\s+`)
+	data := space.ReplaceAllString(text, " ")
+	strip_data := strings.TrimSpace(data)
+	fmt.Println(strip_data)
+	return strip_data
 }
