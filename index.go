@@ -51,5 +51,5 @@ func main() {
 		goDotEnvVariable("DB_NAME"),
 	)
 	// start the http server
-	a.Run(":8010")
+	a.Run(":8080")
 }
