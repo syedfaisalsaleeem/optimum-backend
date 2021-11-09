@@ -129,6 +129,20 @@ func TestPostEmptyItem(t *testing.T) {
 
 }
 
+func TestPostJsonFormat(t *testing.T) {
+	clearTable()
+	var jsonStr = []byte(`{"Todolist22":123}`)
+	req, _ := http.NewRequest("POST", "/todolist", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+
+	response := executeRequest(req)
+
+	if response.Code != 400 {
+		t.Errorf("Invalid json passed --")
+	}
+
+}
+
 func addtodoitemsintable(count int) {
 	if count < 1 {
 		count = 1
