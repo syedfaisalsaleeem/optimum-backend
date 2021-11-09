@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 )
 
@@ -139,6 +140,29 @@ func TestPostJsonFormat(t *testing.T) {
 
 	if response.Code != 400 {
 		t.Errorf("Invalid json passed --")
+	}
+
+}
+
+func TestGettodolistjson(t *testing.T) {
+	clearTable()
+	addtodoitemsintable(1)
+
+	req, _ := http.NewRequest("GET", "/todolist", nil)
+	req.Header.Set("Content-Type", "application/json")
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.Code)
+	bytes := []byte(response.Body.String())
+
+	// Unmarshal string into structs.
+	var m1 []todo
+	json.Unmarshal(bytes, &m1)
+	if reflect.TypeOf(m1).Kind() != reflect.Slice {
+		t.Errorf("Invalid format returned --")
+	}
+	if m1[0].ID != 1.0 {
+		t.Errorf("Expected todo ID to be '1'. Got '%v'", m1[0].ID)
 	}
 
 }
