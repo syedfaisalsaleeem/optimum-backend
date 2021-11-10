@@ -47,26 +47,26 @@ Test the application using `go test . -v`
 
 Launches the test runner in the interactive watch mode.\
 All the test cases are described below:
-- RUN   TestNew
-- PASS: TestNew (0.00s)     
-- RUN   Test_testAPI        
-- PASS: Test_testAPI (0.00s)
-- RUN   TestDBConnection    
-- PASS: TestDBConnection (0.09s)
-- RUN   TestEmptyTable
-- PASS: TestEmptyTable (0.01s) 
-- RUN   TestAddTodoList        
-- PASS: TestAddTodoList (0.00s)
-- RUN   TestGetTodoListitems   
-- PASS: TestGetTodoListitems (0.00s)
-- RUN   TestPostEmptyItem
-- PASS: TestPostEmptyItem (0.00s)
-- RUN   TestPostJsonFormat
-- PASS: TestPostJsonFormat (0.00s)
-- RUN   TestGettodolistjson
-- PASS: TestGettodolistjson (0.00s)
-- RUN   TestLenoftodolistafteradding
-- PASS: TestLenoftodolistafteradding (0.00s)
+=== RUN   TestNew
+--- PASS: TestNew (0.04s)
+=== RUN   Test_testAPI
+--- PASS: Test_testAPI (0.00s)
+=== RUN   TestDBConnection
+--- PASS: TestDBConnection (0.00s)
+=== RUN   TestEmptyTable
+--- PASS: TestEmptyTable (0.02s)
+=== RUN   TestAddTodoList
+--- PASS: TestAddTodoList (0.01s)
+=== RUN   TestGetTodoListitems
+--- PASS: TestGetTodoListitems (0.00s)
+=== RUN   TestPostEmptyItem
+--- PASS: TestPostEmptyItem (0.00s)
+=== RUN   TestPostJsonFormat
+--- PASS: TestPostJsonFormat (0.00s)
+=== RUN   TestGettodolistjson
+--- PASS: TestGettodolistjson (0.01s)
+=== RUN   TestLenoftodolistafteradding
+--- PASS: TestLenoftodolistafteradding (0.00s)
 
 ## Running Rest Api through Docker
 The rest apis are dockerized and they can be run through these commands:
